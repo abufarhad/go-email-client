@@ -1,9 +1,13 @@
 package main
 
 import (
-	"fmt"
+	"email-client/internal/backend"
+	"email-client/internal/controller"
+	"email-client/internal/ui"
 )
 
 func main() {
-	fmt.Println("Hello Backend...")
+	store := backend.NewStore()
+	handler := controller.NewHandler(store)
+	ui.StartApp(handler)
 }
