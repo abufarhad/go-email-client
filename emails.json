@@ -1,20 +1,11 @@
 [
   {
-    "ID": "d9f490c5-64c4-4cca-99bb-8f5733181167",
+    "ID": "5fa4de39-11d2-464b-8e39-503ecca06ecf",
     "From": "me@example.com",
-    "To": "hello@gm.com",
-    "Subject": "dfwer",
-    "Body": "erwer",
-    "Timestamp": "2025-04-18T12:35:20.936143+06:00",
-    "Read": false
-  },
-  {
-    "ID": "dd57043c-92dc-4d7e-b77d-f523a089fed3",
-    "From": "me@example.com",
-    "To": "sf@df.me",
-    "Subject": "er@ff.cdd",
-    "Body": "wqere",
-    "Timestamp": "2025-04-18T10:12:24.323146+06:00",
+    "To": "fsdf@gmail.com",
+    "Subject": "test",
+    "Body": "This is a test email",
+    "Timestamp": "2025-04-18T15:57:11.356992+06:00",
     "Read": false
   },
   {

@@ -2,8 +2,6 @@ package service
 
 import "email-client/internal/domain/model"
 
-//go:generate mockgen -destination=../../mock/email_repo.go -package=mock email-client/internal/domain/service EmailRepository
-
 type EmailRepository interface {
 	ListEmails() []model.Email
 	GetEmail(id string) *model.Email
