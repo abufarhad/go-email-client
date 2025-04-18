@@ -18,6 +18,24 @@ This project demonstrates clean architecture, form-based input, and async operat
 
 ---
 
+## 🧪 Project Structure
+
+```
+├── cmd/main.go             # Entry point
+├── internal/
+│   ├── domain/             # Business logic
+│   ├── interface/
+│   │   ├── controller/     # Handlers
+│   │   ├── persistence/    # File-based store
+│   │   └── ui/             # TUI components
+│   └── model/              # Email model
+├── Dockerfile
+├── Makefile
+└── README.md
+```
+
+---
+
 ## 🛠️ Requirements
 
 - Go 1.21+
@@ -53,24 +71,6 @@ make clean       # Removes the Docker image
 - `d` → 🗑️ Delete Email
 - `ESC` → Go back to previous screen
 - `Tab` / `Shift+Tab` → Navigate form fields
-
----
-
-## 🧪 Project Structure
-
-```
-├── cmd/main.go             # Entry point
-├── internal/
-│   ├── domain/             # Business logic
-│   ├── interface/
-│   │   ├── controller/     # Handlers
-│   │   ├── persistence/    # File-based store
-│   │   └── ui/             # TUI components
-│   └── model/              # Email model
-├── Dockerfile
-├── Makefile
-└── README.md
-```
 
 ---
 
