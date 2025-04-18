@@ -4,9 +4,10 @@ import (
 	"email-client/internal/domain/model"
 	"email-client/internal/interface/controller"
 	"fmt"
+	"strings"
+
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
-	"strings"
 )
 
 func WithBackButton(app *tview.Application, backTo tview.Primitive, content tview.Primitive) tview.Primitive {
@@ -32,11 +33,8 @@ func WithBackButton(app *tview.Application, backTo tview.Primitive, content tvie
 
 func StartApp(handler *controller.Handler) {
 	app := tview.NewApplication()
-
 	detail := tview.NewTextView().SetDynamicColors(true).SetWrap(true)
 	list := tview.NewList()
-
-	setupForm(app, handler, list, detail)
 	flex := tview.NewFlex().SetDirection(tview.FlexColumn)
 
 	list.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
@@ -47,24 +45,19 @@ func StartApp(handler *controller.Handler) {
 		return event
 	})
 
-	menu := tview.NewList().
-		AddItem("Inbox", "View your inbox", 'i', func() {
-			inbox := handler.GetInbox()
-			list.Clear()
-			for _, email := range inbox {
-				email := email // capture the loop variable
-				list.AddItem(fmt.Sprintf("[%s] %s", email.From, email.Subject), "", 0, func() {
-					detail.SetText(fmt.Sprintf("[::b]From:[-:-] %s\n[::b]To:[-:-] %s\n[::b]Subject:[-:-] %s\n\n%s",
-						email.From, email.To, email.Subject, email.Body))
-					app.SetRoot(WithBackButton(app, list, detail), true)
-				})
-			}
-			app.SetRoot(list, true)
-		}).
-		AddItem("Compose", "Write a new email", 'c', func() {
-			newForm := setupForm(app, handler, list, detail)
-			app.SetRoot(WithBackButton(app, flex, newForm), true)
-		}).AddItem("🗑️ Delete", "Choose an email to delete", 'd', func() {
+	menu := tview.NewList()
+
+	menu.AddItem("📥 Inbox", "View your inbox", 'i', func() {
+		refreshInbox(app, handler, list, detail)
+		app.SetRoot(list, true)
+	})
+
+	menu.AddItem("📝 Compose", "Write a new email", 'c', func() {
+		newForm := setupForm(app, handler, list, detail)
+		app.SetRoot(WithBackButton(app, flex, newForm), true)
+	})
+
+	menu.AddItem("🗑️ Delete", "Choose an email to delete", 'd', func() {
 		inbox := handler.GetInbox()
 		deleteList := tview.NewList()
 
@@ -72,17 +65,7 @@ func StartApp(handler *controller.Handler) {
 			email := email
 			deleteList.AddItem(fmt.Sprintf("[%s] %s", email.From, email.Subject), "", 0, func() {
 				handler.Delete(email.ID)
-
-				inbox := handler.GetInbox()
-				list.Clear()
-				for _, e := range inbox {
-					e := e
-					list.AddItem(fmt.Sprintf("[%s] %s", e.From, e.Subject), "", 0, func() {
-						detail.SetText(fmt.Sprintf("[::b]From:[-:-] %s\n[::b]To:[-:-] %s\n[::b]Subject:[-:-] %s\n\n%s",
-							e.From, e.To, e.Subject, e.Body))
-						app.SetRoot(WithBackButton(app, list, detail), true)
-					})
-				}
+				refreshInbox(app, handler, list, detail)
 
 				modal := tview.NewModal().
 					SetText("✅ Email deleted successfully!").
@@ -103,19 +86,20 @@ func StartApp(handler *controller.Handler) {
 		})
 
 		app.SetRoot(WithBackButton(app, flex, deleteList), true)
-	}).
-		AddItem("Quit", "Exit app", 'q', func() {
-			app.Stop()
-		})
+	})
+
+	menu.AddItem("❌ Quit", "Exit app", 'q', func() {
+		app.Stop()
+	})
 
 	flex.AddItem(menu, 30, 1, true)
-
 	app.SetRoot(flex, true)
 	app.Run()
 }
 
 func setupForm(app *tview.Application, handler *controller.Handler, list *tview.List, detail *tview.TextView) *tview.Form {
 	form := tview.NewForm()
+
 	form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyDown:
@@ -125,6 +109,7 @@ func setupForm(app *tview.Application, handler *controller.Handler, list *tview.
 		}
 		return event
 	})
+
 	form.
 		AddInputField("To", "", 40, nil, nil).
 		AddInputField("Subject", "", 40, nil, nil).
@@ -156,16 +141,7 @@ func setupForm(app *tview.Application, handler *controller.Handler, list *tview.
 			form.GetFormItemByLabel("Subject").(*tview.InputField).SetText("")
 			form.GetFormItemByLabel("Body").(*tview.InputField).SetText("")
 
-			inbox := handler.GetInbox()
-			list.Clear()
-			for _, email := range inbox {
-				email := email
-				list.AddItem(fmt.Sprintf("[%s] %s", email.From, email.Subject), "", 0, func() {
-					detail.SetText(fmt.Sprintf("[::b]From:[-:-] %s\n[::b]To:[-:-] %s\n[::b]Subject:[-:-] %s\n\n%s",
-						email.From, email.To, email.Subject, email.Body))
-					app.SetRoot(WithBackButton(app, list, detail), true)
-				})
-			}
+			refreshInbox(app, handler, list, detail)
 			app.SetRoot(list, true)
 		}).
 		AddButton("Cancel", func() {
@@ -176,4 +152,17 @@ func setupForm(app *tview.Application, handler *controller.Handler, list *tview.
 		})
 
 	return form
+}
+
+func refreshInbox(app *tview.Application, handler *controller.Handler, list *tview.List, detail *tview.TextView) {
+	inbox := handler.GetInbox()
+	list.Clear()
+	for _, email := range inbox {
+		email := email
+		list.AddItem(fmt.Sprintf("[%s] %s", email.From, email.Subject), "", 0, func() {
+			detail.SetText(fmt.Sprintf("[::b]From:[-:-] %s\n[::b]To:[-:-] %s\n[::b]Subject:[-:-] %s\n\n%s",
+				email.From, email.To, email.Subject, email.Body))
+			app.SetRoot(WithBackButton(app, list, detail), true)
+		})
+	}
 }
