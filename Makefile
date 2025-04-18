@@ -1,10 +1,17 @@
-.PHONY: build run clean
+.PHONY: build run clean image
+
+
+APP_NAME = email-client
+DOCKER_IMAGE = $(APP_NAME):latest
 
 build:
-	go build -o email-client ./cmd
+	docker build -t $(DOCKER_IMAGE) .
 
 run:
-	go run cmd/main.go
+	docker run --rm -it $(DOCKER_IMAGE)
 
 clean:
-	rm -f email-client
+	docker rmi -f $(DOCKER_IMAGE)
+
+image:
+	docker images | grep $(APP_NAME)
