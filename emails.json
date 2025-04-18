@@ -1,0 +1,38 @@
+[
+  {
+    "ID": "d9f490c5-64c4-4cca-99bb-8f5733181167",
+    "From": "me@example.com",
+    "To": "hello@gm.com",
+    "Subject": "dfwer",
+    "Body": "erwer",
+    "Timestamp": "2025-04-18T12:35:20.936143+06:00",
+    "Read": false
+  },
+  {
+    "ID": "dd57043c-92dc-4d7e-b77d-f523a089fed3",
+    "From": "me@example.com",
+    "To": "sf@df.me",
+    "Subject": "er@ff.cdd",
+    "Body": "wqere",
+    "Timestamp": "2025-04-18T10:12:24.323146+06:00",
+    "Read": false
+  },
+  {
+    "ID": "c81fba5e-71db-4f76-a824-fee4dcdc43c4",
+    "From": "me@example.com",
+    "To": "sdf@ex.com",
+    "Subject": "fgd@ex.com",
+    "Body": "Hello test",
+    "Timestamp": "2025-04-18T09:47:49.069053+06:00",
+    "Read": false
+  },
+  {
+    "ID": "4ff98702-aa7e-4aa9-bd3d-eec621068cf6",
+    "From": "system@client.io",
+    "To": "you@example.com",
+    "Subject": "Welcome",
+    "Body": "Hello!",
+    "Timestamp": "2025-04-17T21:23:04.09493+06:00",
+    "Read": false
+  }
+]
