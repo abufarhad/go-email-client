@@ -1,35 +1,40 @@
-# Start from the official Go image as a builder
-FROM golang:1.22 AS builder
-
-# Set environment variables
+# ---------- Stage 1: Build terminal app ----------
+FROM golang:1.22 AS terminal-builder
 ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
 
-# Create app directory
 WORKDIR /app
-
-# Copy go mod and sum files
 COPY go.mod go.sum ./
-
-# Download dependencies
 RUN go mod download
-
-# Copy the entire project
 COPY . .
-
-# Build the Go app
 RUN go build -o email-client ./cmd
 
-# Final lightweight stage
+# ---------- Stage 2: Build WebSocket server ----------
+FROM golang:1.22 AS server-builder
+ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
+
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN go build -o server ./web
+
+
+# ---------- Final Stage ----------
 FROM alpine:latest
 
-# Add certificate bundle (optional but useful for net/http)
-RUN apk --no-cache add ca-certificates
+RUN apk add --no-cache ca-certificates
 
-# Set working directory
 WORKDIR /app
 
-# Copy built binary from builder
-COPY --from=builder /app/email-client .
+# Copy both binaries and make sure they're executable
+COPY --from=terminal-builder /app/email-client .
+COPY --from=server-builder /app/server .
+COPY ./web/static /app/web/static
 
-# Set the entrypoint
-ENTRYPOINT ["./email-client"]
+
+# Ensure binary has exec perms (just in case)
+RUN chmod +x /app/server /app/email-client
+
+EXPOSE 8080
+ENTRYPOINT ["/app/server"]
+

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Fullscreen Terminal</title>
+    <link rel="stylesheet" href="https://unpkg.com/xterm/css/xterm.css" />
+    <style>
+        html, body {
+            margin: 0; padding: 0;
+            height: 100%; width: 100%;
+            background: black; overflow: hidden;
+        }
+        #terminal {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="terminal"></div>
+<script src="https://unpkg.com/xterm/lib/xterm.js"></script>
+<script src="https://unpkg.com/xterm-addon-fit/lib/xterm-addon-fit.js"></script>
+
+<script>
+    const term = new Terminal({ fontSize: 16, theme: { background: "#000", foreground: "#0f0" } });
+    const fit = new FitAddon.FitAddon();
+    term.loadAddon(fit);
+    term.open(document.getElementById("terminal"));
+    fit.fit();
+
+    const socket = new WebSocket("ws://" + location.host + "/ws");
+    socket.onopen = sendResize;
+    socket.onmessage = e => term.write(e.data);
+    term.onData(d => socket.send(d));
+
+    window.addEventListener("resize", () => {
+        fit.fit();
+        sendResize();
+    });
+
+    function sendResize() {
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ resize: true, cols: term.cols, rows: term.rows }));
+        }
+    }
+</script>
+</body>
+</html>
