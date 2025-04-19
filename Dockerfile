@@ -18,23 +18,29 @@ RUN go mod download
 COPY . .
 RUN go build -o server ./web
 
-
 # ---------- Final Stage ----------
 FROM alpine:latest
 
-RUN apk add --no-cache ca-certificates
+# ✅ Install required tools
+RUN apk add --no-cache \
+    ca-certificates \
+    make
 
 WORKDIR /app
 
-# Copy both binaries and make sure they're executable
+# ✅ Copy binaries from previous stages
 COPY --from=terminal-builder /app/email-client .
 COPY --from=server-builder /app/server .
-COPY ./web/static /app/web/static
 
+# ✅ Copy static HTML/JS frontend
+RUN mkdir -p /app/web/static
+COPY ./web/static/index.html /app/web/static/index.html
 
-# Ensure binary has exec perms (just in case)
+# ✅ Set execute permissions
 RUN chmod +x /app/server /app/email-client
 
+# ✅ Expose the WebSocket/HTTP server port
 EXPOSE 8080
-ENTRYPOINT ["/app/server"]
 
+# ✅ Start the server
+ENTRYPOINT ["/app/server"]
