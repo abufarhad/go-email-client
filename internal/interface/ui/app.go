@@ -33,10 +33,13 @@ func WithBackButton(app *tview.Application, backTo tview.Primitive, content tvie
 
 func StartApp(handler *controller.Handler) {
 	app := tview.NewApplication()
+	tview.NewTextView().
+		SetTextAlign(tview.AlignCenter).
+		SetText("📬 Welcome to Email Client")
+
 	detail := tview.NewTextView().SetDynamicColors(true).SetWrap(true)
 	list := tview.NewList()
-	flex := tview.NewFlex().SetDirection(tview.FlexColumn)
-
+	flex := tview.NewFlex().SetDirection(tview.FlexRow)
 	list.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyEsc {
 			app.SetRoot(flex, true)
@@ -46,7 +49,6 @@ func StartApp(handler *controller.Handler) {
 	})
 
 	menu := tview.NewList()
-
 	menu.AddItem("📥 Inbox", "View your inbox", 'i', func() {
 		refreshInbox(app, handler, list, detail)
 		app.SetRoot(list, true)
@@ -57,7 +59,7 @@ func StartApp(handler *controller.Handler) {
 		app.SetRoot(WithBackButton(app, flex, newForm), true)
 	})
 
-	menu.AddItem("🗑️ Delete", "Choose an email to delete", 'd', func() {
+	menu.AddItem("🗑  Delete", "Choose an email to delete", 'd', func() {
 		inbox := handler.GetInbox()
 		deleteList := tview.NewList()
 
@@ -92,7 +94,11 @@ func StartApp(handler *controller.Handler) {
 		app.Stop()
 	})
 
-	flex.AddItem(menu, 30, 1, true)
+	flex.AddItem(tview.NewFlex().SetDirection(tview.FlexColumn).
+		AddItem(menu, 0, 1, true), // make menu stretch horizontally
+		0, 1, true) // make row stretch vertically
+
+	// flex.AddItem(menu, 30, 1, true)
 	app.SetRoot(flex, true)
 	app.Run()
 }

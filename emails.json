@@ -1,23 +1,5 @@
 [
   {
-    "ID": "5fa4de39-11d2-464b-8e39-503ecca06ecf",
-    "From": "me@example.com",
-    "To": "fsdf@gmail.com",
-    "Subject": "test",
-    "Body": "This is a test email",
-    "Timestamp": "2025-04-18T15:57:11.356992+06:00",
-    "Read": false
-  },
-  {
-    "ID": "c81fba5e-71db-4f76-a824-fee4dcdc43c4",
-    "From": "me@example.com",
-    "To": "sdf@ex.com",
-    "Subject": "fgd@ex.com",
-    "Body": "Hello test",
-    "Timestamp": "2025-04-18T09:47:49.069053+06:00",
-    "Read": false
-  },
-  {
     "ID": "4ff98702-aa7e-4aa9-bd3d-eec621068cf6",
     "From": "system@client.io",
     "To": "you@example.com",

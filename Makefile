@@ -1,17 +1,31 @@
-.PHONY: build run clean image
+APP_NAME=email-client
+APP_SRC=./cmd
 
+SERVER_NAME=server
+SERVER_SRC=./web
 
-APP_NAME = email-client
-DOCKER_IMAGE = $(APP_NAME):latest
+PORT=8080
+IMAGE_NAME=$(APP_NAME)-web
 
+.PHONY: build run docker-build docker-run clean
+
+# Build both binaries into project root
 build:
-	docker build -t $(DOCKER_IMAGE) .
+	go build -o $(APP_NAME) $(APP_SRC)
+	go build -o $(SERVER_NAME) $(SERVER_SRC)
 
-run:
-	docker run --rm -it $(DOCKER_IMAGE)
+# Run the WebSocket server locally
+run: build
+	./$(SERVER_NAME)
 
+# Build Docker image
+docker-build:
+	docker build -t $(IMAGE_NAME) .
+
+# Run Docker container
+docker-run:
+	docker run -p $(PORT):8080 $(IMAGE_NAME)
+
+# Clean up binaries
 clean:
-	docker rmi -f $(DOCKER_IMAGE)
-
-image:
-	docker images | grep $(APP_NAME)
+	docker rmi -f $(IMAGE_NAME)
