@@ -2,54 +2,95 @@
 
 A fast and minimal terminal-based email client built in Go. Inspired by tools like `mutt`, `aerc`, and `himalaya`.
 
-This project demonstrates clean architecture, form-based input, and async operations using Go + TUI (`tview`).
+This project demonstrates clean architecture, form-based input, SMTP/IMAP support, and async operations using Go + TUI (`tview`).
 
 ---
 
 ## ✨ Features
 
-- 📥 View Inbox
-- 📝 Compose plain text emails
-- 🗑️ Delete selected emails
-- ESC/back navigation from all views
+- 📥 View Inbox (via file store or real IMAP)
+- 📝 Compose & send real emails via SMTP
+- 🚗 Dual-mode backend: file or real email provider (Gmail, Outlook, etc.)
+- 🗑️ Delete email (file-based only)
+- ❌ ESC/back navigation from all views
 - ✅ Email validation and success messages
+- 📃 Logs written to `logs.txt` (resets each run)
 - 🐳 Docker support
 - 🧼 Clean, modular code structure
 
 ---
 
-## 🧪 Project Structure
+## 🔌 SMTP/IMAP Integration
+
+Enable real email capabilities with Gmail, Outlook, Fastmail, etc. (via App Passwords or standard login).
+
+### Setup `.env`:
+
+```env
+USE_REAL_EMAIL=true/false
+EMAIL_IMAP_HOST=imap.gmail.com
+EMAIL_SMTP_HOST=smtp.gmail.com
+EMAIL_SMTP_PORT=587
+EMAIL_IMAP_PORT=993
+EMAIL_USER=your@email.com
+EMAIL_PASS=your-app-password
+
+NUMBER_OF_EMAIL_TO_FETCH=5
+```
+
+> ⚠️ Use App Password for Gmail (NOT your real password!)
+
+---
+
+## 📅 Logging
+
+Logs are written to `logs.txt` and **cleared every time** the app starts.
+
+```go
+logFile, _ := os.OpenFile("logs.txt", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
+log.SetOutput(logFile)
+```
+
+Check logs without UI clutter:
+```bash
+tail -f logs.txt
+```
+
+---
+
+## 📊 Project Structure
 
 ```
 go-email-client/
 ├── cmd/
-│   └── main.go                       # Entry point for the terminal app
+│   └── main.go                       # Entry point for terminal app
 ├── internal/
 │   ├── domain/
 │   │   ├── model/
 │   │   │   └── email.go              # Email entity/model
 │   │   └── service/
-│   │       └── email_service.go      # Business logic for email operations
+│   │       └── email_service.go      # Business logic
 │   ├── infra/
 │   │   └── logger/
-│   │       └── logger.go             # Logging setup
+│   │       └── logger.go             # Logger setup
 │   └── interface/
 │       ├── controller/
-│       │   └── handler.go            # Application handlers (e.g. for email logic)
+│       │   └── handler.go            # Application layer
 │       ├── persistence/
-│       │   └── file_store.go         # Local storage for emails (JSON file)
+│       │   ├── file_store.go         # File-based backend
+│       │   └── imap_smtp_store.go    # Real IMAP/SMTP backend
 │       └── ui/
-│           └── app.go                # TUI (terminal UI) with tview
+│           └── app.go                # TUI (tview)
 ├── web/
 │   ├── static/
-│   │   └── index.html                # Web frontend (xterm.js)
-│   └── main.go                       # WebSocket + PTY server for browser UI
-├── emails.json                       # Local email data
-├── Dockerfile                        # Multi-stage Docker setup
-├── Makefile                          # Build, run, dockerize the app
-├── go.mod                            # Go modules metadata
-├── go.sum                            # Go modules checksum
-└── README.md                         # Project overview (you're here)
+│   │   └── index.html                # Web terminal via xterm.js
+│   └── main.go                       # WebSocket/PTY server
+├── emails.json                       # Local file email DB
+├── logs.txt                          # Log output
+├── Dockerfile                        # Multi-stage Docker build
+├── Makefile                          # CLI helpers
+├── .env                              # Config vars
+└── README.md                         # You're here
 ```
 
 ---
@@ -58,7 +99,7 @@ go-email-client/
 
 - Go 1.21+
 - Docker (optional)
-- `make` (for easier commands)
+- `make` (for simplified workflows)
 
 ---
 
@@ -67,57 +108,54 @@ go-email-client/
 ### 🔧 Local Build (No Docker)
 
 🔹 Run Terminal-Only App
-
 ```bash
-go run cmd/main.go
+go run cmd/main.go              # terminal-only UI
 ```
 
 🔹 Run Web-Based Terminal UI
-
 ```bash
-go build -o email-client ./cmd
-go run ./web 
+go build -o email-client ./cmd  # build CLI binary
+go run ./web                    # run web interface
 ```
+
 🔹 Or Use the Makefile (Recommended)
-
 ```bash
-make build
-make run
+make build && make run
 ```
-Then open the app in your browser:
 
-```bash
-http://localhost:8080/
-```
+Visit: [http://localhost:8080](http://localhost:8080)
 
 ### 🐳 Docker Workflow
 
 ```bash
-make docker-build   # Builds Docker image with terminal + WebSocket server
-make docker-run     # Runs the app in a Docker container on port 8080
-make clean          # Removes built binaries
+make docker-build   # builds WebSocket + CLI
+make docker-run     # launches container on port 8080
+make clean          # removes built binaries
 ```
-Server will be available at:
-http://localhost:8080/
+
+Visit: [http://localhost:8080](http://localhost:8080)
+
 ---
 
-## 🧑‍💻 Controls
+## 👨‍💻 Controls
 
 - `i` → 📥 Open Inbox
 - `c` → 📝 Compose Email
 - `d` → 🗑️ Delete Email
-- `ESC` → Go back to previous screen
-- `Tab` / `Shift+Tab` → Navigate form fields
+- `ESC` → Back
+- `Tab` / `Shift+Tab` → Move between form fields
 
 ---
 
-## 📂 Data
+## 📂 Data Layer
 
-Emails are stored in-memory or via simple file store. Modify persistence logic in:
-`internal/interface/persistence/file_store.go`
+- Fake local store: `file_store.go`
+- Real backend (SMTP/IMAP): `imap_smtp_store.go`
+
+Switch between them via `USE_REAL_EMAIL` in `.env`
 
 ---
 
 ## 📄 License
 
-MIT License. Do whatever you want. Just don’t send spam. 😄
+MIT License. Use it, share it, build on it — but don’t send spam 😏

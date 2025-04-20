@@ -22,11 +22,11 @@ func main() {
 	}
 
 	var emailService *service.EmailService
-	useReal := os.Getenv("USE_REAL_EMAIL") == "true"
+	useReal := os.Getenv("USE_REAL_EMAIL")
 
 	log.Printf("🧠 USE_REAL_EMAIL = %v", useReal)
 
-	if useReal {
+	if useReal == "true" {
 		log.Println("📡 Using real IMAP/SMTP email backend")
 
 		email := os.Getenv("EMAIL_USER")
@@ -40,6 +40,7 @@ func main() {
 
 		imapStore := persistence.NewImapSmtpStore(
 			os.Getenv("EMAIL_IMAP_HOST"),
+			os.Getenv("EMAIL_IMAP_PORT"),
 			os.Getenv("EMAIL_SMTP_HOST"),
 			os.Getenv("EMAIL_SMTP_PORT"),
 			email,
