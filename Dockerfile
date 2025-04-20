@@ -30,7 +30,7 @@ RUN apk add --no-cache \
 WORKDIR /app
 
 # ✅ Copy binaries from previous stages
-COPY --from=terminal-builder /app/email-client .
+COPY --from=terminal-builder /email-client .
 COPY --from=server-builder /app/server .
 
 # ✅ Copy static HTML/JS frontend
