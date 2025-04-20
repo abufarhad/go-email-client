@@ -6,7 +6,7 @@ import (
 	"email-client/internal/interface/controller"
 	"email-client/internal/interface/persistence"
 	"email-client/internal/interface/ui"
-	"github.com/joho/godotenv"
+	"email-client/utils"
 	"log"
 	"os"
 )
@@ -15,11 +15,7 @@ func main() {
 	logger.InitLogger()
 	log.Println("🚀 Starting Email Client")
 
-	// Load environment variables from .env
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("⚠️  No .env file found, falling back to system env")
-	}
+	utils.LoadEnv()
 
 	var emailService *service.EmailService
 	useReal := os.Getenv("USE_REAL_EMAIL")
