@@ -27,7 +27,7 @@ Enable real email capabilities with Gmail, Outlook, Fastmail, etc. (via App Pass
 ### Setup `.env`:
 
 ```env
-USE_REAL_EMAIL=true/false
+USE_REAL_EMAIL=true 
 EMAIL_IMAP_HOST=imap.gmail.com
 EMAIL_SMTP_HOST=smtp.gmail.com
 EMAIL_SMTP_PORT=587
@@ -39,22 +39,6 @@ NUMBER_OF_EMAIL_TO_FETCH=5
 ```
 
 > ⚠️ Use App Password for Gmail (NOT your real password!)
-
----
-
-## 📅 Logging
-
-Logs are written to `logs.txt` and **cleared every time** the app starts.
-
-```go
-logFile, _ := os.OpenFile("logs.txt", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
-log.SetOutput(logFile)
-```
-
-Check logs without UI clutter:
-```bash
-tail -f logs.txt
-```
 
 ---
 
