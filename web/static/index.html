@@ -27,7 +27,9 @@
     term.open(document.getElementById("terminal"));
     fit.fit();
 
-    const socket = new WebSocket("ws://" + location.host + "/ws");
+    const protocol = location.protocol === "https:" ? "wss://" : "ws://";
+    const socket = new WebSocket(protocol + location.host + "/ws");
+
     socket.onopen = sendResize;
     socket.onmessage = e => term.write(e.data);
     term.onData(d => socket.send(d));

@@ -40,6 +40,8 @@ COPY ./web/static /app/web/static
 # ✅ Set execute permissions
 RUN chmod +x /app/server /app/email-client
 
+RUN ls -la /app
+
 # ✅ Expose the WebSocket/HTTP server port
 EXPOSE 8080
 
