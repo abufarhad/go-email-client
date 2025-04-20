@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"sync"
+	"time"
+)
 
 type Email struct {
 	ID        string
@@ -10,4 +13,10 @@ type Email struct {
 	Body      string
 	Timestamp time.Time
 	Read      bool
+}
+
+type FileStore struct {
+	path   string
+	emails []Email
+	mu     sync.Mutex
 }
