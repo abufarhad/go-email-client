@@ -1,12 +1,15 @@
 package logger
 
 import (
-	"go.uber.org/zap"
+	"log"
+	"os"
 )
 
-var Log *zap.SugaredLogger
-
 func InitLogger() {
-	zapLog, _ := zap.NewDevelopment()
-	Log = zapLog.Sugar()
+	logFile, err := os.OpenFile("logs.txt", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
+	if err != nil {
+		log.Fatal("❌ Failed to open log file:", err)
+	}
+	log.SetOutput(logFile)
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 }

@@ -2,8 +2,8 @@ package persistence
 
 import (
 	"email-client/internal/domain/model"
-	"email-client/internal/infra/logger"
 	"encoding/json"
+	"log"
 	"os"
 	"sync"
 	"time"
@@ -26,7 +26,7 @@ func NewFileStore(path string) *FileStore {
 func (fs *FileStore) load() {
 	if data, err := os.ReadFile(fs.path); err == nil {
 		json.Unmarshal(data, &fs.emails)
-		logger.Log.Infow("Loaded emails from file", "count", len(fs.emails))
+		log.Println("Loaded emails from file", "count", len(fs.emails))
 	} else {
 		fs.emails = []model.Email{
 			{
@@ -75,5 +75,5 @@ func (fs *FileStore) SaveEmail(email model.Email) {
 	email.Timestamp = time.Now()
 	fs.emails = append([]model.Email{email}, fs.emails...)
 	fs.save()
-	// logger.Log.Infow("Saved email", "subject", email.Subject, "to", email.To)
+	log.Println("Saved email", "subject", email.Subject, "to", email.To)
 }
