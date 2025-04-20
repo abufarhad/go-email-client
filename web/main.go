@@ -1,6 +1,7 @@
 package main
 
 import (
+	"email-client/utils"
 	"encoding/json"
 	"github.com/creack/pty"
 	"github.com/gorilla/websocket"
@@ -29,7 +30,8 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Close()
 
-	cmd := exec.Command("./email-client")
+	binaryPath := os.Getenv("EMAIL_CLIENT_BINARY_PATH")
+	cmd := exec.Command(binaryPath)
 	cmd.Env = append(os.Environ(), "TERM=xterm-256color")
 
 	ptmx, err := pty.Start(cmd)
@@ -82,6 +84,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	utils.LoadEnv()
 	fs := http.FileServer(http.Dir(filepath.Join("web", "static")))
 	http.Handle("/", fs)
 	http.HandleFunc("/ws", wsHandler)
