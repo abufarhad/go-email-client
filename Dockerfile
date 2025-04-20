@@ -24,7 +24,8 @@ FROM alpine:latest
 # ✅ Install required tools
 RUN apk add --no-cache \
     ca-certificates \
-    make
+    make \
+    ncurses
 
 WORKDIR /app
 
@@ -34,7 +35,7 @@ COPY --from=server-builder /app/server .
 
 # ✅ Copy static HTML/JS frontend
 RUN mkdir -p /app/web/static
-COPY ./web/static/index.html /app/web/static/index.html
+COPY ./web/static /app/web/static
 
 # ✅ Set execute permissions
 RUN chmod +x /app/server /app/email-client

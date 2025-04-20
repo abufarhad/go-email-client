@@ -4,6 +4,7 @@ import (
 	"email-client/internal/domain/model"
 	"email-client/internal/interface/controller"
 	"fmt"
+	"net/mail"
 	"strings"
 
 	"github.com/gdamore/tcell/v2"
@@ -31,15 +32,18 @@ func WithBackButton(app *tview.Application, backTo tview.Primitive, content tvie
 	return layout
 }
 
+func isValidEmail(email string) bool {
+	_, err := mail.ParseAddress(email)
+	return err == nil
+}
+
 func StartApp(handler *controller.Handler) {
 	app := tview.NewApplication()
-	tview.NewTextView().
-		SetTextAlign(tview.AlignCenter).
-		SetText("📬 Welcome to Email Client")
 
 	detail := tview.NewTextView().SetDynamicColors(true).SetWrap(true)
 	list := tview.NewList()
 	flex := tview.NewFlex().SetDirection(tview.FlexRow)
+
 	list.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyEsc {
 			app.SetRoot(flex, true)
@@ -94,13 +98,18 @@ func StartApp(handler *controller.Handler) {
 		app.Stop()
 	})
 
-	flex.AddItem(tview.NewFlex().SetDirection(tview.FlexColumn).
-		AddItem(menu, 0, 1, true), // make menu stretch horizontally
-		0, 1, true) // make row stretch vertically
+	flex.AddItem(
+		tview.NewFlex().SetDirection(tview.FlexColumn).
+			AddItem(menu, 0, 1, true),
+		0, 1, true,
+	)
 
-	// flex.AddItem(menu, 30, 1, true)
 	app.SetRoot(flex, true)
-	app.Run()
+
+	// Ensure app doesn't silently fail
+	if err := app.Run(); err != nil {
+		fmt.Println("🚨 Error running TUI:", err)
+	}
 }
 
 func setupForm(app *tview.Application, handler *controller.Handler, list *tview.List, detail *tview.TextView) *tview.Form {
@@ -130,7 +139,8 @@ func setupForm(app *tview.Application, handler *controller.Handler, list *tview.
 				app.SetRoot(WithBackButton(app, list, detail), true)
 				return
 			}
-			if !strings.Contains(to, "@") || !strings.Contains(to, ".") {
+
+			if !isValidEmail(to) || !strings.Contains(to, "@") || !strings.Contains(to, ".") {
 				detail.SetText("[red]Invalid email address format.")
 				app.SetRoot(WithBackButton(app, list, detail), true)
 				return

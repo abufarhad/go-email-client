@@ -76,7 +76,7 @@ go run cmd/main.go
 
 ```bash
 go build -o email-client ./cmd
-go run cmd/main.go
+go run ./web 
 ```
 🔹 Or Use the Makefile (Recommended)
 

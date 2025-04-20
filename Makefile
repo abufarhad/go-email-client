@@ -15,7 +15,7 @@ build:
 	go build -o $(SERVER_NAME) $(SERVER_SRC)
 
 # Run the WebSocket server locally
-run: build
+run:
 	./$(SERVER_NAME)
 
 # Build Docker image
