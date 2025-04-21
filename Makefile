@@ -29,3 +29,7 @@ docker-run:
 # Clean up binaries
 clean:
 	docker rmi -f $(IMAGE_NAME)
+
+# Run all tests
+test:
+	go test ./... -v
