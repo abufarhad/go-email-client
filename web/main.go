@@ -89,6 +89,7 @@ func main() {
 	http.Handle("/", fs)
 	http.HandleFunc("/ws", wsHandler)
 
-	log.Println("🚀 Server listening on http://0.0.0.0:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	port := os.Getenv("WEB_APP_PORT")
+	log.Printf("🚀 Server listening on http://0.0.0.0:%s", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

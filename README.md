@@ -4,6 +4,13 @@ A fast and minimal terminal-based email client built in Go. Inspired by tools li
 
 This project demonstrates clean architecture, form-based input, SMTP/IMAP support, and async operations using Go + TUI (`tview`).
 
+[🚀 Live Demo](https://go-email-client-production.up.railway.app)
+
+---
+## 📹 Video Preview
+
+[![Watch the video](https://img.icons8.com/ios-filled/50/000000/video.png)](https://github.com/user-attachments/assets/3c8b52d6-9256-4786-b251-15a75c10850c)
+
 ---
 
 ## ✨ Features
@@ -53,28 +60,34 @@ go-email-client/
 │   │   ├── model/
 │   │   │   └── email.go              # Email entity/model
 │   │   └── service/
-│   │       └── email_service.go      # Business logic
+│   │       └── email_service.go      # Core business logic
 │   ├── infra/
 │   │   └── logger/
-│   │       └── logger.go             # Logger setup
-│   └── interface/
-│       ├── controller/
-│       │   └── handler.go            # Application layer
-│       ├── persistence/
-│       │   ├── file_store.go         # File-based backend
-│       │   └── imap_smtp_store.go    # Real IMAP/SMTP backend
-│       └── ui/
-│           └── app.go                # TUI (tview)
+│   │       └── logger.go             # Logging utility
+│   ├── interface/
+│   │   ├── controller/
+│   │   │   └── handler.go            # Request handlers/controllers
+│   │   ├── persistence/
+│   │   │   ├── file_store.go         # File-based storage backend
+│   │   │   └── imap_smtp_store.go    # IMAP/SMTP storage backend
+│   │   └── ui/
+│   │       └── app.go                # Terminal UI (TUI) using tview
+│   └── utils/
+│       └── utils.go                  # Utility functions
 ├── web/
 │   ├── static/
-│   │   └── index.html                # Web terminal via xterm.js
-│   └── main.go                       # WebSocket/PTY server
-├── emails.json                       # Local file email DB
-├── logs.txt                          # Log output
-├── Dockerfile                        # Multi-stage Docker build
-├── Makefile                          # CLI helpers
-├── .env                              # Config vars
-└── README.md                         # You're here
+│   │   └── index.html                # Web terminal frontend (xterm.js)
+│   └── main.go                       # WebSocket server for web terminal
+├── .env                              # Environment variables (local)
+├── .env.example                      # Example env file
+├── .gitignore                        # Git ignore rules
+├── Dockerfile                        # Docker build instructions
+├── emails.json                       # Sample email data
+├── go.mod                            # Go module definition
+├── LICENSE                           # License info
+├── logs.txt                          # App logs (output)
+├── Makefile                          # CLI build/test helpers
+└── README.md                         # You're here!
 ```
 
 ---
