@@ -54,40 +54,38 @@ NUMBER_OF_EMAIL_TO_FETCH=5
 ```
 go-email-client/
 ├── cmd/
-│   └── main.go                       # Entry point for terminal app
+│   └── main.go                       # Application entry point (CLI)
 ├── internal/
 │   ├── domain/
 │   │   ├── model/
-│   │   │   └── email.go              # Email entity/model
+│   │   │   └── email.go              # Core domain model for emails
 │   │   └── service/
-│   │       └── email_service.go      # Core business logic
+│   │       └── email_service.go      # Business logic for email operations
 │   ├── infra/
 │   │   └── logger/
-│   │       └── logger.go             # Logging utility
+│   │       └── logger.go             # Centralized logging configuration
 │   ├── interface/
 │   │   ├── controller/
-│   │   │   └── handler.go            # Request handlers/controllers
+│   │   │   └── handler.go            # Application-layer request handling
 │   │   ├── persistence/
-│   │   │   ├── file_store.go         # File-based storage backend
-│   │   │   └── imap_smtp_store.go    # IMAP/SMTP storage backend
+│   │   │   ├── file_store.go         # File-based storage implementation
+│   │   │   └── imap_smtp_store.go    # IMAP/SMTP backend implementation
 │   │   └── ui/
 │   │       └── app.go                # Terminal UI (TUI) using tview
 │   └── utils/
-│       └── utils.go                  # Utility functions
+│       └── utils.go                  # Shared utility functions
 ├── web/
 │   ├── static/
-│   │   └── index.html                # Web terminal frontend (xterm.js)
-│   └── main.go                       # WebSocket server for web terminal
-├── .env                              # Environment variables (local)
-├── .env.example                      # Example env file
-├── .gitignore                        # Git ignore rules
-├── Dockerfile                        # Docker build instructions
-├── emails.json                       # Sample email data
+│   │   └── index.html                # Web-based terminal (xterm.js)
+│   └── main.go                       # WebSocket and PTY server
+├── .env.example                      # Sample environment configuration
+├── .gitignore                        # Git ignored files and directories
+├── Dockerfile                        # Docker multi-stage build config
+├── emails.json                       # Sample local email data store
 ├── go.mod                            # Go module definition
-├── LICENSE                           # License info
-├── logs.txt                          # App logs (output)
-├── Makefile                          # CLI build/test helpers
-└── README.md                         # You're here!
+├── logs.txt                          # Log output file
+├── Makefile                          # Build and development commands
+└── README.md                         # Project documentation
 ```
 
 ---
