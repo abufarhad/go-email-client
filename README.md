@@ -11,6 +11,10 @@ This project demonstrates clean architecture, form-based input, SMTP/IMAP suppor
 
 [![Watch the video](https://img.icons8.com/ios-filled/50/000000/video.png)](https://github.com/user-attachments/assets/e51d6e1e-caba-43a2-924e-1569bec423d6)
 
+### 🎥 Watch the Full Demo
+
+[🚀 YouTube Video](https://youtu.be/e9KuynLewJQ)
+
 ---
 
 ## ✨ Features
