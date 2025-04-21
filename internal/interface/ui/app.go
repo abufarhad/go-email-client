@@ -40,6 +40,11 @@ func isValidEmail(email string) bool {
 func StartApp(handler *controller.Handler) {
 	app := tview.NewApplication()
 
+	welcome := tview.NewTextView().
+		SetTextAlign(tview.AlignCenter).
+		SetText("[::b][yellow]📬 Welcome to GoMail Terminal Client!").
+		SetDynamicColors(true)
+
 	detail := tview.NewTextView().SetDynamicColors(true).SetWrap(true)
 	list := tview.NewList()
 	flex := tview.NewFlex().SetDirection(tview.FlexRow)
@@ -98,6 +103,7 @@ func StartApp(handler *controller.Handler) {
 		app.Stop()
 	})
 
+	flex.AddItem(welcome, 2, 0, false)
 	flex.AddItem(
 		tview.NewFlex().SetDirection(tview.FlexColumn).
 			AddItem(menu, 0, 1, true),
@@ -106,7 +112,6 @@ func StartApp(handler *controller.Handler) {
 
 	app.SetRoot(flex, true)
 
-	// Ensure app doesn't silently fail
 	if err := app.Run(); err != nil {
 		fmt.Println("🚨 Error running TUI:", err)
 	}
