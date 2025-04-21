@@ -4,6 +4,8 @@ A fast and minimal terminal-based email client built in Go. Inspired by tools li
 
 This project demonstrates clean architecture, form-based input, SMTP/IMAP support, and async operations using Go + TUI (`tview`).
 
+[🚀 Live Demo](https://go-email-client-production.up.railway.app)
+
 ---
 ## 📹 Video Preview
 
