@@ -1,4 +1,4 @@
-# 📬 Terminal Email Client
+# 📬 Terminal Email Client [ GoMail ]
 
 A fast and minimal terminal-based email client built in Go. Inspired by tools like `mutt`, `aerc`, and `himalaya`.
 
