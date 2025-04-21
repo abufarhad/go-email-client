@@ -1,5 +1,5 @@
-2025/04/20 22:46:12 main.go:16: 🚀 Starting Email Client
-2025/04/20 22:46:12 main.go:23: 🧠 USE_REAL_EMAIL = true
-2025/04/20 22:46:12 main.go:26: 📡 Using real IMAP/SMTP email backend
-2025/04/20 22:46:12 main.go:35: 📧 Email configured for user: abufarhad15@gmail.com
-2025/04/20 22:46:12 main.go:54: 🖥️  Launching TUI...
+2025/04/21 14:07:28 main.go:16: 🚀 Starting Email Client
+2025/04/21 14:07:28 main.go:23: 🧠 USE_REAL_EMAIL = true
+2025/04/21 14:07:28 main.go:26: 📡 Using real IMAP/SMTP email backend
+2025/04/21 14:07:28 main.go:35: 📧 Email configured for user: goemailclient15@gmail.com
+2025/04/21 14:07:28 main.go:54: 🖥️  Launching TUI...
