@@ -152,9 +152,3 @@ Visit: [http://localhost:8080](http://localhost:8080)
 - Real backend (SMTP/IMAP): `imap_smtp_store.go`
 
 Switch between them via `USE_REAL_EMAIL` in `.env`
-
----
-
-## 📄 License
-
-MIT License. Use it, share it, build on it — but don’t send spam 😏
